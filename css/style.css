@@ -1,0 +1,53 @@
+:root {
+  --indigo-500: #6366f1;
+}
+
+/* utils */
+.text-indigo-500 {
+  color: var(--indigo-500);
+}
+/* end utils */
+
+/* header */
+header {
+  background-color: rgb(248, 249, 250);
+  color: var(--indigo-500);
+  padding: 0.75rem;
+}
+/* end header */
+
+/* Search input */
+#search {
+  border: none;
+  width: 100%;
+}
+
+#search:focus {
+  outline: 0;
+}
+/* end search input */
+
+/* btn indigo */
+.btn-indigo-500 {
+  border: 1px solid var(--indigo-500);
+  color: var(--indigo-500);
+  text-align: center;
+}
+
+.btn-indigo-500:hover,
+.btn-indigo-500:active,
+.btn-indigo-500:focus {
+  color: white;
+  background-color: var(--indigo-500);
+}
+
+/* books list */
+#unfinished-books > *:hover:not(h3),
+#finished-books > *:hover:not(h3) {
+  border: 1px solid var(--indigo-500);
+}
+
+/* Footer */
+footer {
+  background-color: #6366f1;
+}
