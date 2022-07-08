@@ -36,7 +36,6 @@ function render() {
   }
 
   // berikan event untuk card
-  const modalConfirm = document.getElementById('modalConfirmDelete');
   const buttonsDelete = document.querySelectorAll('.btnDelete');
   buttonsDelete.forEach((btnDel) => {
     btnDel.addEventListener('click', function () {
@@ -45,6 +44,7 @@ function render() {
       const title = cardBody.querySelector('.card-title').innerText;
       const id = cardBody.parentNode.dataset.id;
       // kirimkan ke modal
+      const modalConfirm = document.getElementById('modalConfirmDelete');
       const modalBody = modalConfirm.querySelector('.modal-body');
       modalBody.dataset.id = id;
       modalBody.querySelector('strong').innerText = title;
@@ -88,6 +88,23 @@ function render() {
           book.title +
           ' to Unfinished Bookshelf'
       );
+    });
+  });
+
+  // event btn edit
+  const buttonsEdit = document.querySelectorAll('.btnEdit');
+  buttonsEdit.forEach((btnEdit) => {
+    btnEdit.addEventListener('click', function () {
+      // ambil id
+      const id = this.parentNode.parentNode.parentNode.parentNode.dataset.id;
+      // get book
+      const book = getBook(id);
+      // kirimkan ke modal edit
+      const formEdit = document.getElementById('editBook');
+      formEdit.querySelector('input#id').value = book.id;
+      formEdit.querySelector('input#title').value = book.title;
+      formEdit.querySelector('input#author').value = book.author;
+      formEdit.querySelector('input#year').value = book.year;
     });
   });
 }
@@ -236,8 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = modalConfirm.querySelector('.modal-body').dataset.id;
     // delete data
     const index = bookshelf.findIndex((book) => book.id == id);
-    console.log(index);
-    return;
     bookshelf.splice(index, 1);
     // hide modal
     this.previousElementSibling.click();
@@ -245,19 +260,35 @@ document.addEventListener('DOMContentLoaded', () => {
     render();
     showToast('Success', 'Success Delete Book with id ' + id);
   });
-  // cari form edit book
-  // beri event ketika disubmit
-  // ambil data-id pada form
-  // edit data
-  // set localstorage
-  // render
-  // toast
+
+  // event modal edit
+  const modalEdit = document.getElementById('modalEditBook');
+  modalEdit.addEventListener('hidden.bs.modal', function () {
+    this.querySelector('form').reset();
+  });
+
+  modalEdit.querySelector('form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    // get data
+    const id = this.querySelector('input#id').value;
+    const title = this.querySelector('input#title').value;
+    const author = this.querySelector('input#author').value;
+    const year = this.querySelector('input#year').value;
+    // edit book
+    const book = getBook(id);
+    book.title = title;
+    book.author = author;
+    book.year = year;
+    // hide modal
+    this.querySelector('.btn-close').click(0);
+
+    storeData();
+    render();
+    showToast('Success', 'Success edit book with id ' + id);
+  });
+
   if (isStorangeExists()) {
     loadDataFromStorage();
     render();
   }
-  // cek apakah localStorage dengan nama bookshelf
-  // jika ada push tiap tiap bookshelft ke dalam variable bookshelf
-  // jika tidak ada buat localStorange dengan value array kosong
-  // jika sudah render
 });

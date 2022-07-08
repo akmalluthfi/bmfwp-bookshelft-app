@@ -95,15 +95,15 @@
             <div class="modal-body">
               <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" />
+                <input type="text" class="form-control" id="title" required />
               </div>
               <div class="mb-3">
                 <label for="author" class="form-label">Author</label>
-                <input type="text" class="form-control" id="author" />
+                <input type="text" class="form-control" id="author" required />
               </div>
               <div class="mb-3">
                 <label for="year" class="form-label">Year</label>
-                <input type="number" class="form-control" id="year" />
+                <input type="number" class="form-control" id="year" required />
               </div>
             </div>
             <div class="modal-footer">
@@ -190,10 +190,12 @@
       tabindex="-1"
       aria-labelledby="modalEditBookLabel"
       aria-hidden="true"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <form action="">
+          <form action="" method="get" id="editBook">
             <div class="modal-header">
               <h5 class="modal-title" id="modalEditBookLabel">Edit Book</h5>
               <button
@@ -204,17 +206,18 @@
               ></button>
             </div>
             <div class="modal-body">
+              <input type="hidden" name="id" id="id" />
               <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" />
+                <input type="text" class="form-control" id="title" required />
               </div>
               <div class="mb-3">
                 <label for="author" class="form-label">Author</label>
-                <input type="text" class="form-control" id="author" />
+                <input type="text" class="form-control" id="author" required />
               </div>
               <div class="mb-3">
                 <label for="year" class="form-label">Year</label>
-                <input type="number" class="form-control" id="year" />
+                <input type="number" class="form-control" id="year" required />
               </div>
             </div>
             <div class="modal-footer">
