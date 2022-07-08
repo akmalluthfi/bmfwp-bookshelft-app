@@ -36,9 +36,60 @@ function render() {
   }
 
   // berikan event untuk card
-  // const buttonsDelete = document.querySelectorAll('.btnDelete');
-  const buttonsDelete = document.getElementsByClassName('btnDelete');
-  console.log(buttonsDelete);
+  const modalConfirm = document.getElementById('modalConfirmDelete');
+  const buttonsDelete = document.querySelectorAll('.btnDelete');
+  buttonsDelete.forEach((btnDel) => {
+    btnDel.addEventListener('click', function () {
+      // ambil id dan title
+      const cardBody = this.parentNode.parentNode.parentNode;
+      const title = cardBody.querySelector('.card-title').innerText;
+      const id = cardBody.parentNode.dataset.id;
+      // kirimkan ke modal
+      const modalBody = modalConfirm.querySelector('.modal-body');
+      modalBody.dataset.id = id;
+      modalBody.querySelector('strong').innerText = title;
+    });
+  });
+
+  // event btn mark as read
+  const btnMarksRead = document.querySelectorAll('.btn-read');
+  btnMarksRead.forEach((btnMarkRead) => {
+    btnMarkRead.addEventListener('click', function () {
+      // get id of from card
+      const id = this.parentNode.parentNode.parentNode.parentNode.dataset.id;
+      // get book
+      const book = getBook(id);
+      book.isComplete = true;
+      storeData();
+      render();
+      showToast(
+        'Success',
+        'successfully moved book with title ' +
+          book.title +
+          ' to Finished Bookshelf'
+      );
+    });
+  });
+
+  // event btn mark as unread
+  const btnMarksUnread = document.querySelectorAll('.btn-unread');
+  btnMarksUnread.forEach((btnMarkUnread) => {
+    btnMarkUnread.addEventListener('click', function () {
+      // get id of from card
+      const id = this.parentNode.parentNode.parentNode.parentNode.dataset.id;
+      // get book
+      const book = getBook(id);
+      book.isComplete = false;
+      storeData();
+      render();
+      showToast(
+        'Success',
+        'Successfully moved book with title ' +
+          book.title +
+          ' to Unfinished Bookshelf'
+      );
+    });
+  });
 }
 
 function createCard(book) {
@@ -58,6 +109,7 @@ function createCard(book) {
 
   const card = document.createElement('div');
   card.classList.add('card', 'mb-3', 'shadow-sm');
+  card.dataset.id = book.id;
   card.append(cardBody);
   return card;
 }
@@ -127,6 +179,13 @@ function showToast(title, message) {
   toast.show();
 }
 
+function getBook(id) {
+  for (const book of bookshelf) {
+    if (book.id == id) return book;
+  }
+  return null;
+}
+
 function isStorangeExists() {
   if (typeof Storage !== undefined) return true;
   showToast('Warning', 'Your Browser not supported Local Storage');
@@ -169,6 +228,23 @@ document.addEventListener('DOMContentLoaded', () => {
     storeData();
     showToast('Success', 'success add new book');
   });
+  // event modal delete
+  const modalConfirm = document.getElementById('modalConfirmDelete');
+  const confirmDelete = modalConfirm.querySelector('button[type=submit]');
+  confirmDelete.addEventListener('click', function () {
+    // cari parent lalu
+    const id = modalConfirm.querySelector('.modal-body').dataset.id;
+    // delete data
+    const index = bookshelf.findIndex((book) => book.id == id);
+    console.log(index);
+    return;
+    bookshelf.splice(index, 1);
+    // hide modal
+    this.previousElementSibling.click();
+    storeData();
+    render();
+    showToast('Success', 'Success Delete Book with id ' + id);
+  });
   // cari form edit book
   // beri event ketika disubmit
   // ambil data-id pada form
@@ -176,12 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // set localstorage
   // render
   // toast
-  // ----
-  // cari tombol delete dimodal
-  // ketika ditekan delete
-  // ambil id pada tombol
-  // delete data berdasarkan id
-  // ----
   if (isStorangeExists()) {
     loadDataFromStorage();
     render();
