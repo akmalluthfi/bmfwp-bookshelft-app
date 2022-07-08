@@ -1,6 +1,6 @@
 const bookshelf = [];
 
-function render() {
+function render(filter = null) {
   // get unfinished book and finished book container
   const unfinished = document.getElementById('unfinished-books');
   const finished = document.getElementById('finished-books');
@@ -10,7 +10,15 @@ function render() {
 
   let countUnfinished = 0;
   let countFinished = 0;
-  bookshelf.forEach((book) => {
+
+  const filteredBookshelft = bookshelf.filter((book) => {
+    if (filter !== null) {
+      return book.title.toLowerCase().includes(filter);
+    } else {
+      return book;
+    }
+  });
+  filteredBookshelft.forEach((book) => {
     const bookCard = createCard(book);
     if (book.isComplete) {
       countFinished++;
@@ -285,6 +293,15 @@ document.addEventListener('DOMContentLoaded', () => {
     storeData();
     render();
     showToast('Success', 'Success edit book with id ' + id);
+  });
+
+  // event search
+  let debounce;
+  document.getElementById('search').addEventListener('input', function (e) {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
+      render(this.value);
+    }, 500);
   });
 
   if (isStorangeExists()) {
